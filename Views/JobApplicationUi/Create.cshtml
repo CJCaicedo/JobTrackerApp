@@ -1,0 +1,321 @@
+@* ---------------------------------------------------------
+   File: Create.cshtml
+   Description: Page where the user can add a new job application.
+   Notes: Shows a form and sends the info to the server.
+   Author: Cindy Johana Caicedo
+   --------------------------------------------------------- *@
+
+@model JobTrackerApp.Dtos.JobApplicationCreateDto
+
+@{
+    ViewData["Title"] = "Add Job Application";
+}
+
+<div class="kb-page">
+    <header class="kb-header">
+        <div class="kb-brand">
+            <img src="~/images/logocindy.png" alt="Logo" class="kb-logo" onerror="this.style.display='none'" />
+            <div>
+                <h1 class="kb-title">Add new job</h1>
+                <p class="kb-sub">Save a new application to your board</p>
+            </div>
+        </div>
+        <a asp-controller="JobApplicationUi" asp-action="Index" class="btn btn-primary">← Back to board</a>
+    </header>
+
+    <div class="kb-edit-wrapper">
+        <div class="kb-card kb-edit-card">
+            <form asp-controller="JobApplicationUi" asp-action="Create" method="post" class="kb-form-grid">
+                <div asp-validation-summary="All" class="text-danger kb-full"></div>
+
+                <!-- Row 1 -->
+                <div class="kb-field">
+                    <label asp-for="Company" class="kb-label"></label>
+                    <input asp-for="Company" class="kb-input" />
+                    <span asp-validation-for="Company" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="JobTitle" class="kb-label"></label>
+                    <input asp-for="JobTitle" class="kb-input" />
+                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="kb-field">
+                    <label asp-for="Status" class="kb-label"></label>
+                    <select asp-for="Status" class="kb-input"
+                            asp-items="Html.GetEnumSelectList<JobTrackerApp.Dtos.ApplicationStatus>()">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="EmploymentType" class="kb-label"></label>
+                    <select asp-for="EmploymentType" class="kb-input"
+                            asp-items="Html.GetEnumSelectList<JobTrackerApp.Dtos.EmploymentType>()">
+                        <option value="">-- Select Type --</option>
+                    </select>
+                    <span asp-validation-for="EmploymentType" class="text-danger"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="kb-field kb-full">
+                    <label asp-for="Description" class="kb-label"></label>
+                    <textarea asp-for="Description" class="kb-input" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Links -->
+                <div class="kb-field">
+                    <label asp-for="WebsiteLink" class="kb-label"></label>
+                    <input asp-for="WebsiteLink" class="kb-input" placeholder="https://example.com/job" />
+                    <span asp-validation-for="WebsiteLink" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="ResumeUrl" class="kb-label"></label>
+                    <input asp-for="ResumeUrl" class="kb-input" placeholder="https://drive.google.com/resume.pdf" />
+                    <span asp-validation-for="ResumeUrl" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="CoverLetter" class="kb-label"></label>
+                    <input asp-for="CoverLetter" class="kb-input" placeholder="https://drive.google.com/cover-letter.pdf" />
+                    <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="Salary" class="kb-label"></label>
+                    <input asp-for="Salary" class="kb-input" placeholder="85000" />
+                    <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+
+                <!-- Date + Contact -->
+                <div class="kb-field">
+                    <label asp-for="DateApplied" class="kb-label"></label>
+                    <input asp-for="DateApplied" type="date" class="kb-input" id="DateApplied" />
+                    <span asp-validation-for="DateApplied" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="ContactPerson" class="kb-label"></label>
+                    <input asp-for="ContactPerson" class="kb-input" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="ContactEmail" class="kb-label"></label>
+                    <input asp-for="ContactEmail" class="kb-input" />
+                    <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="kb-full kb-actions-line">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Save application
+                    </button>
+                    <a asp-controller="JobApplicationUi" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+    <script>
+        // Calendar auto-open on hover (only in supported browsers)
+        const dateInput = document.getElementById('DateApplied');
+        if (dateInput && dateInput.showPicker) {
+            dateInput.addEventListener('mouseenter', () => {
+                dateInput.showPicker();
+            });
+        }
+    </script>
+}
+
+<style>
+    body {
+        background: radial-gradient(circle at 30% 20%, #0f172a 0%, #1e293b 70%, #020617 100%);
+        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        color: #f8fafc;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kb-page {
+        max-width: 1280px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .kb-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .kb-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .kb-logo {
+        width: 140px;
+        height: auto;
+        object-fit: contain;
+        padding: 4px;
+    }
+
+    .kb-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin: 0;
+        color: #f1f5f9;
+    }
+
+    .kb-sub {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #7c3aed, #6366f1);
+        box-shadow: 0 0 15px rgba(99,102,241,0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: #e2e8f0;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255,255,255,0.12);
+    }
+
+    .kb-edit-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .kb-card {
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 18px;
+        padding: 1.5rem 1.7rem;
+        width: 100%;
+        max-width: 860px;
+        box-shadow: 0 10px 35px rgba(0,0,0,.35);
+    }
+
+    /* 2-column form */
+    .kb-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem 1.5rem;
+    }
+
+    .kb-field {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+    }
+
+    .kb-label {
+        font-weight: 500;
+        font-size: .78rem;
+        color: #e2e8f0;
+    }
+
+    .kb-input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: rgba(2,6,23,0.35);
+        border: 1px solid rgba(148,163,184,0.35);
+        border-radius: 8px;
+        padding: .45rem .6rem;
+        color: #e2e8f0;
+        font-size: .8rem;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.25s ease;
+        width: 100%;
+    }
+
+    .kb-input:focus {
+        outline: none;
+        border-color: rgba(99,102,241,0.8);
+        box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+    }
+
+    /* Dropdown custom arrow */
+    select.kb-input {
+        background-image: linear-gradient(45deg, transparent 50%, #a5b4fc 50%),
+                          linear-gradient(135deg, #a5b4fc 50%, transparent 50%);
+        background-position: calc(100% - 18px) calc(50% - 3px),
+                             calc(100% - 13px) calc(50% - 3px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 2rem;
+        cursor: pointer;
+    }
+
+    select.kb-input:hover {
+        border-color: rgba(139,92,246,0.8);
+        box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+    }
+
+    select.kb-input option {
+        background-color: #0f172a;
+        color: #f1f5f9;
+        padding: .4rem;
+    }
+
+    select.kb-input:focus option:checked {
+        background: #6366f1;
+        color: #fff;
+    }
+
+    .kb-full {
+        grid-column: 1 / -1;
+    }
+
+    .kb-actions-line {
+        display: flex;
+        gap: .6rem;
+        margin-top: .4rem;
+    }
+
+    @@media (max-width: 720px) {
+        .kb-form-grid {
+            grid-template-columns: 1fr;
+        }
+        .kb-logo {
+            width: 110px;
+        }
+    }
+</style>

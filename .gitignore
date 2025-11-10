@@ -1,0 +1,48 @@
+# Build and object folders
+bin/
+obj/
+out/
+publish/
+
+# Visual Studio files
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.pid
+
+# Environment variables / secrets
+appsettings.Development.json
+appsettings.Local.json
+appsettings.json
+.env
+*.env
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# OS-specific
+.DS_Store
+*.swp
+
+# Publish output
+wwwroot/lib/
+wwwroot/dist/
+wwwroot/node_modules/
+node_modules/
+
+# Rider / JetBrains
+.idea/
+*.DotSettings.user
+
+# Backup files
+*~

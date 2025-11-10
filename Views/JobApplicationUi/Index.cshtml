@@ -1,0 +1,360 @@
+@* ---------------------------------------------------------
+   File: Index.cshtml
+   Description: This page shows all job applications in the Kanban view.
+   Author: Cindy Johana Caicedo
+   --------------------------------------------------------- *@
+@model IEnumerable<JobTrackerApp.Dtos.JobApplicationReadDto>
+
+@{
+    ViewData["Title"] = "Job Board";
+    // define the order of columns
+    var statuses = new[]
+    {
+        JobTrackerApp.Dtos.ApplicationStatus.Applied,
+        JobTrackerApp.Dtos.ApplicationStatus.Interviewing,
+        JobTrackerApp.Dtos.ApplicationStatus.Offer,
+        JobTrackerApp.Dtos.ApplicationStatus.Rejected
+    };
+}
+
+<div class="kb-page">
+    <header class="kb-header">
+        <div class="kb-brand">
+            <img src="~/images/logocindy.png" alt="Logo" class="kb-logo" onerror="this.style.display='none'" />
+            <div>
+              <!--  <h1 class="kb-title">Cindy’s Job Tracker</h1> 
+                <p class="kb-sub">Track your applications by stage</p> -->
+            </div>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">+ Add job</a>
+    </header>
+
+    <div class="kb-board">
+        @foreach (var status in statuses)
+        {
+            var items = Model.Where(m => m.Status == status)
+                             .OrderByDescending(m => m.DateApplied)
+                             .ToList();
+
+            var statusName = status.ToString();
+
+            <section class="kb-column kb-@statusName.ToLower()">
+                <div class="kb-column-header">
+                    <h2>@statusName</h2>
+                    <span class="kb-pill">@items.Count</span>
+                </div>
+                <div class="kb-column-body">
+                    @if (items.Any())
+                    {
+                        foreach (var job in items)
+                        {
+                            <article class="kb-card">
+                                <div class="kb-card-top">
+                                    <span class="kb-company">@job.Company</span>
+                                    <span class="kb-date">@job.DateApplied.ToShortDateString()</span>
+                                </div>
+                                <h3 class="kb-jobtitle">@job.JobTitle</h3>
+
+                                @if (!string.IsNullOrWhiteSpace(job.Description))
+                                {
+                                    <p class="kb-desc">
+                                        @(job.Description.Length > 90
+                                            ? job.Description.Substring(0, 90) + "..."
+                                            : job.Description)
+                                    </p>
+                                }
+
+                                <div class="kb-meta">
+                                    <span>@job.EmploymentType</span>
+                                    @if (job.Salary.HasValue)
+                                    {
+                                        <span>$@job.Salary.Value.ToString("N0")</span>
+                                    }
+                                </div>
+
+                                <div class="kb-actions">
+                                    <a asp-action="Edit" asp-route-id="@job.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a asp-controller="JobApplicationUi" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+
+                                <div class="kb-links">
+                                    @if (!string.IsNullOrEmpty(job.WebsiteLink))
+                                    {
+                                        <a href="@job.WebsiteLink" target="_blank">Job</a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(job.ResumeUrl))
+                                    {
+                                        <a href="@job.ResumeUrl" target="_blank">Resume</a>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    }
+                    else
+                    {
+                        <p class="kb-empty">No items</p>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+}
+
+<style>
+    /* --- BACKGROUND --- */
+    body {
+        background: radial-gradient(circle at 30% 20%, #0f172a 0%, #1e293b 70%, #020617 100%);
+        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        color: #f8fafc;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kb-page {
+        max-width: 1280px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* --- HEADER --- */
+    .kb-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .kb-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+   .kb-logo {
+    width: 160px;             /* wider for rectangular shape */
+    height: auto;             /* keeps proportions */
+    object-fit: contain;      /* ensures full logo is visible */
+   /* border-radius: 10px;     smooth corners */
+   /* background-color: rgba(255, 255, 255, 0.04);  soft contrast on dark bg */
+    padding: 6px;             /* little breathing space */
+   /* box-shadow: 0 0 15px rgba(139, 92, 246, 0.35);  subtle purple glow */
+}
+
+    .kb-title {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #f1f5f9;
+        margin: 0;
+    }
+
+    .kb-sub {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #94a3b8;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #7c3aed, #6366f1);
+        box-shadow: 0 0 15px rgba(99,102,241,0.4);
+    }
+
+    /* --- BOARD --- */
+    .kb-board {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .kb-column {
+        flex: 1;
+        min-width: 260px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        max-height: 75vh;
+    }
+
+    .kb-column-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        color: #e2e8f0;
+    }
+
+    .kb-pill {
+        background: rgba(255,255,255,0.15);
+        color: #f8fafc;
+        border-radius: 9999px;
+        padding: 0.15rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .kb-column-body {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .kb-card {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        transition: all 0.25s ease;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    }
+
+    .kb-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(99,102,241,0.25);
+        background: rgba(255,255,255,0.12);
+    }
+
+    .kb-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #94a3b8;
+        font-size: 0.7rem;
+    }
+
+    .kb-jobtitle {
+        margin: 0.25rem 0;
+        font-weight: 600;
+        color: #f1f5f9;
+    }
+
+    .kb-company {
+        color: #a5b4fc;
+        font-size: 0.8rem;
+    }
+
+    .kb-desc {
+        font-size: 0.75rem;
+        color: #cbd5e1;
+        line-height: 1.3;
+    }
+
+    .kb-meta {
+        display: flex;
+        gap: .5rem;
+        font-size: .7rem;
+        color: #94a3b8;
+    }
+
+    .kb-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.6rem;
+    }
+
+    .btn-outline-secondary {
+        background: transparent;
+        color: #a5b4fc;
+        border: 1px solid rgba(165,180,252,0.3);
+        border-radius: 6px;
+        padding: 0.25rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-outline-secondary:hover {
+        background: rgba(165,180,252,0.15);
+    }
+
+    .btn-outline-danger {
+        background: transparent;
+        color: #fca5a5;
+        border: 1px solid rgba(252,165,165,0.3);
+        border-radius: 6px;
+        padding: 0.25rem 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-outline-danger:hover {
+        background: rgba(252,165,165,0.15);
+    }
+
+    .kb-links {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        margin-top: .45rem;
+    }
+
+    .kb-links a {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        backdrop-filter: blur(6px);
+        transition: all 0.25s ease;
+    }
+
+    .kb-links a:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+    }
+
+    /* 🌈 Purple glow scrollbar */
+    .kb-column-body::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .kb-column-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .kb-column-body::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #8b5cf6 0%, #6366f1 100%);
+        border-radius: 10px;
+        box-shadow: 0 0 6px rgba(139, 92, 246, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .kb-column-body::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #a78bfa 0%, #818cf8 100%);
+        box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+    }
+
+    .kb-column-body {
+        scrollbar-width: thin;
+        scrollbar-color: #7c3aed transparent;
+    }
+
+    @@media (max-width: 700px) {
+        .kb-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+    }
+</style>

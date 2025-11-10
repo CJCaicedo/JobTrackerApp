@@ -1,0 +1,288 @@
+@* ---------------------------------------------------------
+   File: Edit.cshtml
+   Description: Page to update an existing job application.
+   Notes: Loads current data into the form so the user can change it.
+   Author: Cindy Johana Caicedo
+   --------------------------------------------------------- *@
+
+@model JobTrackerApp.Dtos.JobApplicationUpdateDto
+
+@{
+    ViewData["Title"] = "Edit Job Application";
+}
+
+<div class="kb-page">
+    <header class="kb-header">
+        <div class="kb-brand">
+            <img src="~/images/logocindy.png" alt="Logo" class="kb-logo" onerror="this.style.display='none'" />
+            <div>
+                <h1 class="kb-title">Edit Job Application</h1>
+                <p class="kb-sub">Update the details for this job</p>
+            </div>
+        </div>
+        <a asp-controller="JobApplicationUi" asp-action="Index" class="btn btn-primary">← Back to board</a>
+    </header>
+
+    <div class="kb-edit-wrapper">
+        <div class="kb-card kb-edit-card">
+            <form asp-controller="JobApplicationUi" asp-action="Edit" method="post" class="kb-form-grid">
+                <div asp-validation-summary="All" class="text-danger kb-full"></div>
+
+                <!-- Row 1 -->
+                <div class="kb-field">
+                    <label asp-for="Company" class="kb-label"></label>
+                    <input asp-for="Company" class="kb-input" />
+                    <span asp-validation-for="Company" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="JobTitle" class="kb-label"></label>
+                    <input asp-for="JobTitle" class="kb-input" />
+                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="kb-field">
+                    <label asp-for="Status" class="kb-label"></label>
+                    <select asp-for="Status" class="kb-input"
+                            asp-items="Html.GetEnumSelectList<JobTrackerApp.Dtos.ApplicationStatus>()">
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="EmploymentType" class="kb-label"></label>
+                    <select asp-for="EmploymentType" class="kb-input"
+                            asp-items="Html.GetEnumSelectList<JobTrackerApp.Dtos.EmploymentType>()">
+                    </select>
+                    <span asp-validation-for="EmploymentType" class="text-danger"></span>
+                </div>
+
+                <!-- Description full width -->
+                <div class="kb-field kb-full">
+                    <label asp-for="Description" class="kb-label"></label>
+                    <textarea asp-for="Description" class="kb-input" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Links and Salary -->
+                <div class="kb-field">
+                    <label asp-for="WebsiteLink" class="kb-label"></label>
+                    <input asp-for="WebsiteLink" class="kb-input" />
+                    <span asp-validation-for="WebsiteLink" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="ResumeUrl" class="kb-label"></label>
+                    <input asp-for="ResumeUrl" class="kb-input" />
+                    <span asp-validation-for="ResumeUrl" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="CoverLetter" class="kb-label"></label>
+                    <input asp-for="CoverLetter" class="kb-input" />
+                    <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="Salary" class="kb-label"></label>
+                    <input asp-for="Salary" class="kb-input" />
+                    <span asp-validation-for="Salary" class="text-danger"></span>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="kb-field">
+                    <label asp-for="ContactPerson" class="kb-label"></label>
+                    <input asp-for="ContactPerson" class="kb-input" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+
+                <div class="kb-field">
+                    <label asp-for="ContactEmail" class="kb-label"></label>
+                    <input asp-for="ContactEmail" class="kb-input" />
+                    <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="kb-full kb-actions-line">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a asp-controller="JobApplicationUi" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    body {
+        background: radial-gradient(circle at 30% 20%, #0f172a 0%, #1e293b 70%, #020617 100%);
+        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        color: #f8fafc;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kb-page {
+        max-width: 1280px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .kb-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .kb-brand {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .kb-logo {
+        width: 130px;
+        height: auto;
+    }
+
+    .kb-title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    .kb-sub {
+        margin: 0;
+        font-size: .75rem;
+        color: #94a3b8;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        padding: .5rem 1rem;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #7c3aed, #6366f1);
+        box-shadow: 0 0 12px rgba(99,102,241,0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: #fff;
+        border-radius: 8px;
+        padding: .5rem 1rem;
+        text-decoration: none;
+    }
+
+    .kb-edit-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .kb-card {
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 18px;
+        padding: 1.5rem 1.7rem;
+        width: 100%;
+        max-width: 860px;
+        box-shadow: 0 10px 35px rgba(0,0,0,.35);
+    }
+
+    /* --- 2-column form layout --- */
+    .kb-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem 1.5rem;
+    }
+
+    .kb-field {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+    }
+
+    .kb-label {
+        font-weight: 500;
+        font-size: .78rem;
+        color: #e2e8f0;
+    }
+
+    /* base input + select styling */
+    .kb-input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: rgba(2,6,23,0.35);
+        border: 1px solid rgba(148,163,184,0.35);
+        border-radius: 8px;
+        padding: .45rem .6rem;
+        color: #e2e8f0;
+        font-size: .8rem;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.25s ease;
+        width: 100%;
+    }
+
+    .kb-input:focus {
+        outline: none;
+        border-color: rgba(99,102,241,0.8);
+        box-shadow: 0 0 0 2px rgba(99,102,241,0.1);
+    }
+
+    /* prettier selects (status, employment) */
+    select.kb-input {
+        background-image: linear-gradient(45deg, transparent 50%, #a5b4fc 50%),
+                          linear-gradient(135deg, #a5b4fc 50%, transparent 50%);
+        background-position: calc(100% - 18px) calc(50% - 3px),
+                             calc(100% - 13px) calc(50% - 3px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 2rem;
+        cursor: pointer;
+    }
+
+    select.kb-input:hover {
+        border-color: rgba(139,92,246,0.8);
+        box-shadow: 0 0 0 3px rgba(139,92,246,0.08);
+    }
+
+    select.kb-input option {
+        background-color: #0f172a;
+        color: #f1f5f9;
+        padding: .4rem;
+    }
+
+    select.kb-input:focus option:checked {
+        background: #6366f1;
+        color: #fff;
+    }
+
+    .kb-full {
+        grid-column: 1 / -1;
+    }
+
+    .kb-actions-line {
+        display: flex;
+        gap: .6rem;
+        margin-top: .4rem;
+    }
+
+    @@media (max-width: 720px) {
+        .kb-form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
